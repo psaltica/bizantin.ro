@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Custom applications
+    'collection.apps.CollectionConfig',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +82,11 @@ DATABASES = {
         'NAME': env('PSALTICA_CONTENT_DBFILE'),
     }
 }
+
+DATABASE_ROUTERS = [
+    'psaltica.db.routers.SystemDbRouter',
+    'psaltica.db.routers.CollectionDbRouter',
+]
 
 
 # Password validation
