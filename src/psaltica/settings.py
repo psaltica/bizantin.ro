@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import environ
 import os
 
+
 # Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_DIR = os.path.dirname(BASE_DIR)
@@ -18,6 +19,7 @@ env = environ.Env(
 )
 
 environ.Env.read_env(os.path.join(REPO_DIR, '.env'))
+
 
 # Basics
 SECRET_KEY = env('PSALTICA_SECRET_KEY')
@@ -65,6 +67,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'psaltica.wsgi.application'
+
 
 # Database
 DATABASES = {
