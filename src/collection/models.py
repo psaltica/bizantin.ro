@@ -1,12 +1,25 @@
 from django.db import models
 from enum import Flag
 
+import uuid
 
-class Person(models.Model):
+
+class CollectionModel(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Person(CollectionModel):
     name = models.CharField(max_length=200)
 
 
-class MusicalText(models.Model):
+class MusicalText(CollectionModel):
 
     CONTRIBUTION_TYPES = [
         ('C', "Composed"),
