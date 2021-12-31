@@ -22,18 +22,16 @@ class Person(CollectionModel):
 
 class MusicalText(CollectionModel):
 
-    CONTRIBUTION_TYPES = [
-        ('C', "Composed"),
-        ('T', "Translated"),
-        ('P', "Processed"),
-    ]
+    class ContributionTypes(models.TextChoices):
+        COMPOSED   = 'C', "Composed"
+        TRANSLATED = 'T', "Translated"
+        PROCESSED  = 'P', "Processed"
 
-    LANGUAGES = [
-        ("ar", "Arabic"),
-        ("en", "English"),
-        ("gr", "Greek"),
-        ("ro", "Romanian"),
-    ]
+    class Languages(models.TextChoices):
+        ARABIC   = "ar", "Arabic"
+        ENGLISH  = "en", "English"
+        GREEK    = "gr", "Greek"
+        ROMANIAN = "ro", "Romanian"
 
     class DateAccuracy(models.IntegerChoices):
         DAY     = 0
@@ -66,14 +64,14 @@ class MusicalText(CollectionModel):
 
     lang = models.CharField(
         max_length=2,
-        choices=LANGUAGES,
-        default="ro"
+        choices=Languages.choices,
+        default=Languages.ROMANIAN
     )
 
     contribution = models.CharField(
         max_length=1,
-        choices=CONTRIBUTION_TYPES,
-        default='C'
+        choices=ContributionTypes.choices,
+        default=ContributionTypes.COMPOSED
     )
 
     date = models.DateField(
