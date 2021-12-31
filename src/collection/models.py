@@ -13,12 +13,25 @@ class MusicalText(models.Model):
         ('P', "Processed"),
     ]
 
+    LANGUAGES = [
+        ("ar", "Arabic"),
+        ("en", "English"),
+        ("gr", "Greek"),
+        ("ro", "Romanian"),
+    ]
+
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Person)
 
     original = models.ForeignKey(
         'self',
         blank=True
+    )
+
+    lang = models.CharField(
+        max_length=2,
+        choices=LANGUAGES,
+        default="ro"
     )
 
     contribution = models.CharField(
