@@ -32,10 +32,14 @@ class MusicalText(models.Model):
         PL_D = 0b10000000
 
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(Person)
+    author = models.ForeignKey(
+        Person,
+        on_delete=models.PROTECT
+    )
 
     original = models.ForeignKey(
         'self',
+        on_delete=models.PROTECT,
         blank=True
     )
 
