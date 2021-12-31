@@ -68,6 +68,6 @@ class MusicalText(CollectionModel):
         default='C'
     )
 
-    mode = models.IntegerField()
+    mode = models.PositiveSmallIntegerField()
 
     notes = models.CharField(max_length=512)
