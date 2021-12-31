@@ -10,8 +10,6 @@ class SystemDbRouter:
         'auth',
         'contenttypes',
         'sessions',
-        'messages',
-        'staticfiles'
     ]
 
     def db_for_read(self, model, **hints):
