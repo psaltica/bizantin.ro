@@ -1,6 +1,7 @@
 from django.db import models
 from enum import Flag
 
+import datetime
 import uuid
 
 
@@ -34,6 +35,13 @@ class MusicalText(CollectionModel):
         ("ro", "Romanian"),
     ]
 
+    class DateAccuracy(models.IntegerChoices):
+        DAY     = 0
+        MONTH   = 1
+        YEAR    = 2
+        DECADE  = 3
+        CENTURY = 4
+
     class Modes(Flag):
         A    = 0b00000001
         B    = 0b00000010
@@ -66,6 +74,15 @@ class MusicalText(CollectionModel):
         max_length=1,
         choices=CONTRIBUTION_TYPES,
         default='C'
+    )
+
+    date = models.DateField(
+        default=datetime.date.today
+    )
+
+    date_accuracy = models.PositiveSmallIntegerField(
+        choices=DateAccuracy.choices,
+        default=DateAccuracy.YEAR
     )
 
     mode = models.PositiveSmallIntegerField()
