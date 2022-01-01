@@ -84,8 +84,7 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = [
-    'psaltica.db.routers.SystemDbRouter',
-    'psaltica.db.routers.CollectionDbRouter',
+    'psaltica.db.routers.PsalticaDbRouter',
 ]
 
 
