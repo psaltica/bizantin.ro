@@ -46,6 +46,11 @@ class Author(CollectionModel):
         object_id_field='author_id'
     )
 
+    performances = GenericRelation(
+        'Performance',
+        content_type_field='performer_type',
+        object_id_field='performer_id'
+    )
 
     class Meta:
         abstract = True
@@ -145,3 +150,20 @@ class Translation(CollectionModel):
         ContentType,
         on_delete=models.CASCADE
     )
+
+
+class Performance(CollectionModel):
+    musical_text = models.ForeignKey(
+        MusicalText,
+        on_delete=models.CASCADE
+    )
+
+    performer = GenericForeignKey('performer_type', 'performer_id')
+    performer_id = models.UUIDField()
+    performer_type = models.ForeignKey(
+        ContentType,
+        limit_choices_to=Constraints.AUTHOR_TYPES,
+        on_delete=models.CASCADE
+    )
+
+    online_access = models.URLField()
