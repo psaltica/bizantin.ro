@@ -6,6 +6,14 @@ from enum import Flag
 import datetime
 import uuid
 
+
+class Constraints:
+    AUTHOR_TYPES = [
+        models.Q(app_label='collection', model='person'),
+        models.Q(app_label='collection', model='group'),
+    ]
+
+
 class Languages(models.TextChoices):
     ARABIC   = "ar", "Arabic"
     ENGLISH  = "en", "English"
@@ -26,6 +34,11 @@ class CollectionModel(models.Model):
 
 class Person(CollectionModel):
     name = models.CharField(max_length=200)
+
+
+class Group(CollectionModel):
+    name = models.CharField(max_length=200)
+    members = models.ManyToManyField(Person)
 
 
 class MusicalText(CollectionModel):
@@ -53,9 +66,13 @@ class MusicalText(CollectionModel):
         PL_D = 0b10000000
 
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(
-        Person,
-        on_delete=models.PROTECT
+
+    author = GenericForeignKey('author_type', 'author_id')
+    author_id = models.UUIDField()
+    author_type = models.ForeignKey(
+        ContentType,
+        limit_choices_to=Constraints.AUTHOR_TYPES,
+        on_delete=models.CASCADE
     )
 
     original = models.ForeignKey(
