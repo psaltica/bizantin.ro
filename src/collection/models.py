@@ -1,8 +1,16 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from enum import Flag
 
 import datetime
 import uuid
+
+class Languages(models.TextChoices):
+    ARABIC   = "ar", "Arabic"
+    ENGLISH  = "en", "English"
+    GREEK    = "gr", "Greek"
+    ROMANIAN = "ro", "Romanian"
 
 
 class CollectionModel(models.Model):
@@ -26,12 +34,6 @@ class MusicalText(CollectionModel):
         COMPOSED   = 'C', "Composed"
         TRANSLATED = 'T', "Translated"
         PROCESSED  = 'P', "Processed"
-
-    class Languages(models.TextChoices):
-        ARABIC   = "ar", "Arabic"
-        ENGLISH  = "en", "English"
-        GREEK    = "gr", "Greek"
-        ROMANIAN = "ro", "Romanian"
 
     class DateAccuracy(models.IntegerChoices):
         DAY     = 0
@@ -86,3 +88,22 @@ class MusicalText(CollectionModel):
     mode = models.PositiveSmallIntegerField()
 
     notes = models.CharField(max_length=512)
+
+
+class Translation(CollectionModel):
+    lang = models.CharField(
+        max_length=2,
+        choices=Languages.choices,
+        default=Languages.ROMANIAN
+    )
+
+    text = models.CharField(max_length=512)
+
+    original_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE
+    )
+
+    original_id = models.UUIDField()
+
+    original = GenericForeignKey('original_type', 'original_id')
