@@ -49,34 +49,7 @@ class Author(CollectionModel):
         object_id_field='original_id'
     )
 
-    compositions = GenericRelation(
-        'MusicalText',
-        content_type_field='author_type',
-        object_id_field='author_id'
-    )
-
-    performances = GenericRelation(
-        'Performance',
-        content_type_field='performer_type',
-        object_id_field='performer_id'
-    )
-
-    publications = GenericRelation(
-        'Publication',
-        content_type_field='author_type',
-        object_id_field='author_id'
-    )
-
-    class Meta:
-        abstract = True
-
-
-class Person(Author):
-    pass
-
-
-class Group(Author):
-    members = models.ManyToManyField(Person)
+    members = models.ManyToManyField('self', blank=True)
 
 
 class MusicalText(CollectionModel):
@@ -105,11 +78,8 @@ class MusicalText(CollectionModel):
         object_id_field='original_id'
     )
 
-    author = GenericForeignKey('author_type', 'author_id')
-    author_id = models.UUIDField()
-    author_type = models.ForeignKey(
-        ContentType,
-        limit_choices_to=Constraints.AUTHOR_TYPES,
+    author = models.ForeignKey(
+        Author,
         on_delete=models.CASCADE
     )
 
@@ -170,11 +140,8 @@ class Performance(CollectionModel):
         on_delete=models.CASCADE
     )
 
-    performer = GenericForeignKey('performer_type', 'performer_id')
-    performer_id = models.UUIDField()
-    performer_type = models.ForeignKey(
-        ContentType,
-        limit_choices_to=Constraints.AUTHOR_TYPES,
+    performer = models.ForeignKey(
+        Author,
         on_delete=models.CASCADE
     )
 
@@ -187,11 +154,8 @@ class Publication(CollectionModel):
         on_delete=models.CASCADE
     )
 
-    author = GenericForeignKey('author_type', 'author_id')
-    author_id = models.UUIDField()
-    author_type = models.ForeignKey(
-        ContentType,
-        limit_choices_to=Constraints.AUTHOR_TYPES,
+    author = models.ForeignKey(
+        Author,
         on_delete=models.CASCADE
     )
 
