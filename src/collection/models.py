@@ -15,6 +15,14 @@ class Constraints:
     ]
 
 
+class DateAccuracy(models.IntegerChoices):
+    DAY     = 0
+    MONTH   = 1
+    YEAR    = 2
+    DECADE  = 3
+    CENTURY = 4
+
+
 class Languages(models.TextChoices):
     ARABIC   = "ar", "Arabic"
     ENGLISH  = "en", "English"
@@ -53,6 +61,12 @@ class Author(CollectionModel):
         object_id_field='performer_id'
     )
 
+    publications = GenericRelation(
+        'Publication',
+        content_type_field='author_type',
+        object_id_field='author_id'
+    )
+
     class Meta:
         abstract = True
 
@@ -71,13 +85,6 @@ class MusicalText(CollectionModel):
         COMPOSED   = 'C', "Composed"
         TRANSLATED = 'T', "Translated"
         PROCESSED  = 'P', "Processed"
-
-    class DateAccuracy(models.IntegerChoices):
-        DAY     = 0
-        MONTH   = 1
-        YEAR    = 2
-        DECADE  = 3
-        CENTURY = 4
 
     class Modes(Flag):
         A    = 0b00000001
@@ -170,3 +177,34 @@ class Performance(CollectionModel):
     )
 
     online_access = models.URLField()
+
+
+class Publication(CollectionModel):
+    musical_text = models.ForeignKey(
+        MusicalText,
+        on_delete=models.CASCADE
+    )
+
+    author = GenericForeignKey('author_type', 'author_id')
+    author_id = models.UUIDField()
+    author_type = models.ForeignKey(
+        ContentType,
+        limit_choices_to=Constraints.AUTHOR_TYPES,
+        on_delete=models.CASCADE
+    )
+
+    title = models.CharField(max_length=200)
+    title_translations = GenericRelation(
+        'Translation',
+        content_type_field='original_type',
+        object_id_field='original_id'
+    )
+
+    publisher = models.CharField(max_length=200)
+    isbn = models.CharField(max_length=13)
+
+    date = models.DateField(default=datetime.date.today)
+    date_accuracy = models.PositiveSmallIntegerField(
+        choices=DateAccuracy.choices,
+        default=DateAccuracy.YEAR
+    )
