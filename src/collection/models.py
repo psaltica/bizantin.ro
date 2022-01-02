@@ -86,7 +86,8 @@ class MusicalText(CollectionModel):
     original = models.ForeignKey(
         'self',
         on_delete=models.PROTECT,
-        blank=True
+        blank=True,
+        null=True
     )
 
     lang = models.CharField(
