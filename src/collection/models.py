@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from enum import Flag
 
@@ -130,7 +131,12 @@ class MusicalText(CollectionModel):
         default=DateAccuracy.YEAR
     )
 
-    mode = models.PositiveSmallIntegerField()
+    mode = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(0b11111111),
+            MinValueValidator(0b00000001),
+        ]
+    )
 
     notes = models.CharField(max_length=512)
 
