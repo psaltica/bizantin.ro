@@ -96,6 +96,8 @@ class MusicalText(CollectionModel):
         PL_C = 0b01000000
         PL_D = 0b10000000
 
+    is_secular = models.BooleanField(default=False)
+
     title = models.CharField(max_length=200)
     title_translations = GenericRelation(
         'Translation',
