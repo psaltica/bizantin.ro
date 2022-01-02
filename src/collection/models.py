@@ -1,4 +1,4 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from enum import Flag
@@ -32,12 +32,30 @@ class CollectionModel(models.Model):
         abstract = True
 
 
-class Person(CollectionModel):
+class Author(CollectionModel):
     name = models.CharField(max_length=200)
+    name_translations = GenericRelation(
+        'Translation',
+        content_type_field='original_type',
+        object_id_field='original_id'
+    )
+
+    compositions = GenericRelation(
+        'MusicalText',
+        content_type_field='author_type',
+        object_id_field='author_id'
+    )
 
 
-class Group(CollectionModel):
-    name = models.CharField(max_length=200)
+    class Meta:
+        abstract = True
+
+
+class Person(Author):
+    pass
+
+
+class Group(Author):
     members = models.ManyToManyField(Person)
 
 
@@ -66,6 +84,11 @@ class MusicalText(CollectionModel):
         PL_D = 0b10000000
 
     title = models.CharField(max_length=200)
+    title_translations = GenericRelation(
+        'Translation',
+        content_type_field='original_type',
+        object_id_field='original_id'
+    )
 
     author = GenericForeignKey('author_type', 'author_id')
     author_id = models.UUIDField()
