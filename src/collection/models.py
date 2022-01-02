@@ -116,11 +116,9 @@ class Translation(CollectionModel):
 
     text = models.CharField(max_length=512)
 
+    original = GenericForeignKey('original_type', 'original_id')
+    original_id = models.UUIDField()
     original_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE
     )
-
-    original_id = models.UUIDField()
-
-    original = GenericForeignKey('original_type', 'original_id')
