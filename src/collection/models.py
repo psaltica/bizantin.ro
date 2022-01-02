@@ -122,10 +122,7 @@ class MusicalText(CollectionModel):
         default=ContributionTypes.COMPOSED
     )
 
-    date = models.DateField(
-        default=datetime.date.today
-    )
-
+    date = models.DateField(default=datetime.date.today)
     date_accuracy = models.PositiveSmallIntegerField(
         choices=DateAccuracy.choices,
         default=DateAccuracy.YEAR
