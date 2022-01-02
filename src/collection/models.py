@@ -8,13 +8,6 @@ import datetime
 import uuid
 
 
-class Constraints:
-    AUTHOR_TYPES = [
-        models.Q(app_label='collection', model='person'),
-        models.Q(app_label='collection', model='group'),
-    ]
-
-
 class DateAccuracy(models.IntegerChoices):
     DAY     = 0
     MONTH   = 1
