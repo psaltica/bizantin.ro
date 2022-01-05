@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # REST API applications
+    'rest_framework',
     # Custom applications
     'collection.apps.CollectionConfig',
 ]
@@ -69,6 +71,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'psaltica.wsgi.application'
+
+
+# API
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ]
+}
 
 
 # Database
