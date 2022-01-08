@@ -4,6 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from enum import Flag
 
+from collection.models.author import Author
+
 import datetime
 import uuid
 
@@ -32,17 +34,6 @@ class CollectionModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Author(CollectionModel):
-    name = models.CharField(max_length=200)
-    name_translations = GenericRelation(
-        'Translation',
-        content_type_field='original_type',
-        object_id_field='original_id'
-    )
-
-    members = models.ManyToManyField('self', blank=True)
 
 
 class MusicalText(CollectionModel):
@@ -109,23 +100,6 @@ class MusicalText(CollectionModel):
     )
 
     notes = models.CharField(max_length=512)
-
-
-class Translation(CollectionModel):
-    lang = models.CharField(
-        max_length=2,
-        choices=Languages.choices,
-        default=Languages.ROMANIAN
-    )
-
-    text = models.CharField(max_length=512)
-
-    original = GenericForeignKey('original_type', 'original_id')
-    original_id = models.UUIDField()
-    original_type = models.ForeignKey(
-        ContentType,
-        on_delete=models.CASCADE
-    )
 
 
 class Performance(CollectionModel):
