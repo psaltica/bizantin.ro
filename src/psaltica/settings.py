@@ -90,6 +90,9 @@ DATABASES = {
     'content': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': env('PSALTICA_CONTENT_DBFILE'),
+        'TEST': {
+            'DEPENDENCIES': [],
+        }
     }
 }
 
