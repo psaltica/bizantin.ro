@@ -1,3 +1,4 @@
+from collection.models.common import CollectionModel, TranslatableModel
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -18,25 +19,7 @@ class DateAccuracy(models.IntegerChoices):
     CENTURY = 4
 
 
-class Languages(models.TextChoices):
-    ARABIC   = "ar", "Arabic"
-    ENGLISH  = "en", "English"
-    GREEK    = "gr", "Greek"
-    ROMANIAN = "ro", "Romanian"
-
-
-class CollectionModel(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False
-    )
-
-    class Meta:
-        abstract = True
-
-
-class MusicalText(CollectionModel):
+class MusicalText(CollectionModel, TranslatableModel):
 
     class ContributionTypes(models.TextChoices):
         COMPOSED   = 'C', "Composed"
@@ -56,7 +39,7 @@ class MusicalText(CollectionModel):
     is_secular = models.BooleanField(default=False)
 
     title = models.CharField(max_length=200)
-    title_translations = GenericRelation(
+    translations = GenericRelation(
         'Translation',
         content_type_field='original_type',
         object_id_field='original_id'
@@ -72,12 +55,6 @@ class MusicalText(CollectionModel):
         on_delete=models.PROTECT,
         blank=True,
         null=True
-    )
-
-    lang = models.CharField(
-        max_length=2,
-        choices=Languages.choices,
-        default=Languages.ROMANIAN
     )
 
     contribution = models.CharField(
@@ -116,7 +93,7 @@ class Performance(CollectionModel):
     online_access = models.URLField()
 
 
-class Publication(CollectionModel):
+class Publication(CollectionModel, TranslatableModel):
     musical_text = models.ForeignKey(
         MusicalText,
         on_delete=models.CASCADE
@@ -128,7 +105,7 @@ class Publication(CollectionModel):
     )
 
     title = models.CharField(max_length=200)
-    title_translations = GenericRelation(
+    translations = GenericRelation(
         'Translation',
         content_type_field='original_type',
         object_id_field='original_id'
